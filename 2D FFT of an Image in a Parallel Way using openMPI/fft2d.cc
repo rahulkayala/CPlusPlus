@@ -54,9 +54,6 @@ void Transform1D(Complex* h, int w, Complex* H, bool inverse)
 			{
 				tempOP[n] = tempOP[n] + W((double)w, n, k, inverse)*tempIP[k];	
 			}
-			
-		//	if(inverse)
-		//		tempOP[n] = tempOP[n]*(1/w); 
 		}
 		
 		for (int j=0; j<w; j++)
@@ -66,7 +63,7 @@ void Transform1D(Complex* h, int w, Complex* H, bool inverse)
 	}
 }
 
-void Transform2D(const char* inputFN) 
+void Transform2D(const char* inputFN, const char* outputFN, bool inverse) 
 {
 	//Opening the Image  
 	InputImage image(inputFN);
@@ -88,22 +85,16 @@ void Transform2D(const char* inputFN)
 	}
 
 
-	Transform1D(before1D, imageWidth, after1D, false);
+	Transform1D(before1D, imageWidth, after1D, inverse);
 	MPI_Barrier(MPI_COMM_WORLD);
 
 	//Preparing for AllGather
 	Complex *gatherBuffer1D = new Complex[imageWidth*imageHeight];
 	MPI_Allgather(after1D, nRow*imageWidth, MPI_LONG_DOUBLE, gatherBuffer1D, nRow*imageWidth, MPI_LONG_DOUBLE, MPI_COMM_WORLD);
 
-	//Saving File for Debug
-	if(rank == 0)
-	{
-		image.SaveImageData("myAfter1D.txt",gatherBuffer1D,imageWidth,imageHeight);
-	}
-
-
 	//Getting 2D Transform Column by Column
 	Complex* transform2D = new Complex[imageHeight*imageWidth];
+	
 	//Transforming into Columnwise
 	for(int i=0; i < imageWidth; i++)
 	{
@@ -119,7 +110,7 @@ void Transform2D(const char* inputFN)
 		before2D[j]=transform2D[rank*nRow*imageWidth + j];
 	}
 
-	Transform1D(before2D, imageHeight, after2D, false);
+	Transform1D(before2D, imageHeight, after2D, inverse);
 	MPI_Barrier(MPI_COMM_WORLD);
 	
 	//Setting up for AllGather
@@ -132,69 +123,9 @@ void Transform2D(const char* inputFN)
 			transform2D[j+i*imageHeight] = gatherBuffer2D[j*imageWidth + i];
 	}
 	
+	//Writing to Output File
 	if(rank == 0)
-	image.SaveImageData("MyAfter2d.txt",transform2D,imageWidth,imageHeight); 
-
-	//Getting 1D Inverse Transform Row by Row	
-	Complex* before1DInv = new Complex[nRow*imageWidth];
-	Complex* after1DInv = new Complex[nRow*imageWidth];
-	
-
-	for(int j=0; j < nRow*imageWidth; j++)
-	{
-		before1DInv[j]=transform2D[rank*nRow*imageWidth + j]; //Changed from transform2D
-	}
-
-
-	Transform1D(before1DInv, imageWidth, after1DInv, true);
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	//Preparing for AllGather
-	Complex *gatherBuffer1DInv = new Complex[imageWidth*imageHeight];
-	MPI_Allgather(after1DInv, nRow*imageWidth, MPI_LONG_DOUBLE, gatherBuffer1DInv, nRow*imageWidth, MPI_LONG_DOUBLE, MPI_COMM_WORLD);
-
-	//Saving File for Debug
-	if(rank == 2)
-	{
-		image.SaveImageData("myAfter1dInverse.txt",after1DInv,imageWidth,nRow);
-	}
-
-
-	//Getting 2D Transform Column by Column
-	Complex* transform2DInv = new Complex[imageHeight*imageWidth];
-	//Transforming into Columnwise
-	for(int i=0; i < imageWidth; i++)
-	{
-		for(int j=0; j < imageHeight; j++)
-			transform2DInv[j+i*imageWidth] = gatherBuffer1DInv[j*imageHeight + i];
-	}
-
-	
-	Complex* before2DInv = new Complex[nRow*imageWidth];
-	Complex* after2DInv = new Complex[nRow*imageWidth];
-	for(int j=0; j < nRow*imageWidth; j++)
-	{
-		before2DInv[j]=transform2DInv[rank*nRow*imageWidth + j];
-	}
-
-	Transform1D(before2DInv, imageHeight, after2DInv, true);
-	MPI_Barrier(MPI_COMM_WORLD);
-	
-	//Setting up for AllGather
-	Complex* gatherBuffer2DInv = new Complex[imageHeight*imageWidth];
-	MPI_Allgather(after2DInv, nRow*imageWidth, MPI_LONG_DOUBLE, gatherBuffer2DInv, nRow*imageWidth, MPI_LONG_DOUBLE, MPI_COMM_WORLD);
-
-	for(int i=0; i < imageHeight; i++)
-	{
-		for(int j=0; j < imageWidth; j++)
-			transform2DInv[j+i*imageHeight] = gatherBuffer2DInv[j*imageWidth + i];
-	}
-	
-	if(rank == 0)
-		image.SaveImageData("MyAfterInverse.txt",transform2DInv,imageWidth,imageHeight); 
-	
-
-
+	image.SaveImageData(outputFN.c_str(),transform2D,imageWidth,imageHeight); 
 }
 
  
@@ -216,10 +147,12 @@ int main(int argc, char** argv)
   MPI_Comm_size(MPI_COMM_WORLD,&nCPU);
   MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 
-  //Start The 2D DFT 
-  Transform2D(fn.c_str()); 
+  //Start The 2D Forward DFT 
+  Transform2D(fn.c_str(),"MyAfter2d.txt",false); 
+  
   //Start the 2D IDFT
- // Transform2D("MyAfter2d.txt");
+  Transform2D("MyAfter2d.txt","MyAfterInverse.txt",true);
+  
   // Finalize MPI here
   MPI_Finalize();
 }  
