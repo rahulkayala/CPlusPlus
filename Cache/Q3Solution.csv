@@ -1,0 +1,43 @@
+Address, Tag, Index, Cache Response
+95E3, 4, 350, Miss - Compulsory
+95E6, 4, 350, Hit
+A63F, 5, 99, Miss - Compulsory
+56EC, 2, 366, Miss - Compulsory
+36BA, 1, 363, Miss - Compulsory
+A63A, 5, 99, Hit
+CAE7, 6, 174, Miss - Compulsory
+56E0, 2, 366, Hit
+2ABA, 1, 171, Miss - Compulsory
+7536, 3, 339, Miss - Compulsory
+D5E8, 6, 350, Miss - Compulsory
+CAB6, 6, 171, Miss - Compulsory
+CAEF, 6, 174, Hit
+A63F, 5, 99, Hit
+EABA, 7, 171, Miss - Compulsory
+E636, 7, 99, Miss - Compulsory
+2AEE, 1, 174, Miss - Compulsory
+0ABC, 0, 171, Miss - Compulsory
+D5E2, 6, 350, Hit
+56B6, 2, 363, Miss - Compulsory
+9537, 4, 339, Miss - Compulsory
+35EA, 1, 350, Miss - Compulsory
+36BC, 1, 363, Hit
+95E9, 4, 350, Hit
+7536, 3, 339, Hit
+CAB7, 6, 171, Hit
+B5E5, 5, 350, Miss - Compulsory
+D5E2, 6, 350, Hit
+EABB, 7, 171, Hit
+15E6, 0, 350, Miss - Other
+2AB3, 1, 171, Hit
+CAE7, 6, 174, Hit
+D5EE, 6, 350, Hit
+15EF, 0, 350, Hit
+8AB5, 4, 171, Miss - Other
+35EA, 1, 350, Hit
+95E6, 4, 350, Miss - Other
+2ABA, 1, 171, Miss - Other
+B6E4, 5, 366, Miss - Compulsory
+56EC, 2, 366, Hit
+CABF, 6, 171, Miss - Other
+A63A, 5, 99, Hit

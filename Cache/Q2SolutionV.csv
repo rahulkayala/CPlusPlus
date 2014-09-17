@@ -1,0 +1,43 @@
+Address,Cache Response
+95E3,Miss - Compulsory
+95E6,Hit
+A63F,Miss - Compulsory
+56EC,Miss - Compulsory
+36BA,Miss - Compulsory
+A63A,Hit
+CAE7,Miss - Compulsory
+56E0,Hit
+2ABA,Miss - Compulsory
+7536,Miss - Compulsory
+D5E8,Miss - Compulsory
+CAB6,Miss - Compulsory
+CAEF,Hit
+A63F,Hit
+EABA,Miss - Compulsory
+E636,Miss - Compulsory
+2AEE,Miss - Compulsory
+0ABC,Miss - Compulsory
+D5E2,Hit
+56B6,Miss - Compulsory
+9537,Miss - Compulsory
+35EA,Miss - Compulsory
+36BC,Hit
+95E9,Hit
+7536,Hit
+CAB7,Hit
+B5E5,Miss - Compulsory
+D5E2,Hit
+EABB,Hit
+15E6,Miss - Other
+2AB3,Hit
+CAE7,Hit
+D5EE,Hit
+15EF,Hit
+8AB5,Miss - Other
+35EA,Miss - Other
+95E6,Miss - Other
+2ABA,Hit
+B6E4,Miss - Compulsory
+56EC,Hit
+CABF,Hit
+A63A,Hit
